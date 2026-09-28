@@ -110,7 +110,8 @@ class Network:
         activation_functions : str,
         activation_derivatives = None,
         loss_function: str="mse",
-        loss_derivative = None
+        loss_derivative = None,
+        output_mode="one_hot"
     ):
         """Matrix-based neural network.
 
@@ -129,11 +130,18 @@ class Network:
         self.activation_derivatives = [ACTIVATIONS[func][1] for func in activation_functions]
         self.loss_function = LOSSES[loss_function][0]
         self.loss_derivative = LOSSES[loss_function][1]
+        self.output_mode = output_mode
         
         if activation_derivatives:
             self.activation_derivatives = activation_derivatives
         if loss_derivative:
             self.loss_derivative = loss_derivative
+
+        self.output_mode = output_mode
+        if output_mode == "bitwise":
+            assert structure[-1] == 4, "Bitwise mode requires 4 output neurons!"
+        elif output_mode == "one_hot":
+            assert structure[-1] == 10, "One-hot mode requires 10 output neurons!"
 
         self.weights = []
         self.biases = []
@@ -286,6 +294,27 @@ class Network:
         return np.mean(losses)
 
     # ---------------------------------------------------------
+    # Functions for Binary Decoding
+    # ---------------------------------------------------------
+
+    def encode_labels(self, labels):
+        labels = np.asarray(labels)
+        if self.output_mode == "one_hot":
+            return np.eye(10)[labels]
+        return ((labels[:, None] >> np.arange(3, -1, -1)) & 1).astype(float) #creates the [X,X,X,X] format
+
+    def decode(self, outputs):
+        if self.output_mode == "one_hot":
+            return np.argmax(outputs, axis=1)
+        bits = (outputs >= 0.5).astype(int)
+        return bits @ np.array([8, 4, 2, 1]) #applies the [X,X,X,X] to [8,4,2,1] to decode the binary
+
+    def actual_labels(self, Y):
+        Y = np.asarray(Y)
+        return self.decode(Y) if Y.ndim > 1 else Y #returns integer labels
+
+
+    # ---------------------------------------------------------
     # Evaluation
     # ---------------------------------------------------------
 
@@ -296,14 +325,8 @@ class Network:
         or integer labels with shape (N,).
         """
 
-        predictions = np.argmax(self._forward_batch(X), axis=1)
-
-        Y = np.asarray(Y)
-
-        if Y.ndim > 1:
-            actual = np.argmax(Y, axis=1)
-        else:
-            actual = Y
+        predictions = self.decode(self._forward_batch(X))
+        actual = self.actual_labels(Y)
 
         return np.mean(predictions == actual)
 
@@ -314,19 +337,17 @@ class Network:
     def confusion_matrix(self, X, Y, nr_labels, labels=True):
         """Display and return a confusion matrix."""
 
-        predictions = np.argmax(self._forward_batch(X), axis=1)
+        predictions = self.decode(self._forward_batch(X))
+        actual = self.actual_labels(Y)
 
-        Y = np.asarray(Y)
-
-        if Y.ndim > 1:
-            actual = np.argmax(Y, axis=1)
-        else:
-            actual = Y
+        valid = predictions < nr_labels
+        if not valid.all():
+            print(f"Note: {(~valid).sum()} predictions were invalid (>= {nr_labels}) and are not shown.")
 
         matrix = np.zeros((nr_labels, nr_labels), dtype=int)
 
         # Rows = predicted, columns = actual
-        np.add.at(matrix, (predictions, actual), 1)
+        np.add.at(matrix, (predictions[valid], actual[valid]), 1)
 
         fig, ax = plt.subplots(figsize=(nr_labels, nr_labels))
         ax.imshow(matrix)
