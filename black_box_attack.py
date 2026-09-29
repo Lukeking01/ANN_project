@@ -12,13 +12,13 @@
 ###############################################################################################################################################################################################################
 
 import numpy as np
-from src.modules.dense_net import DenseNet
-from src.modules.save_data import save_points
+from ANN import Network
+from save_points import save_points
 
 class BlackBoxAdversary():
     # Takes in a starting image which we wish to mock with a new image that is as close as possible to the original
     # (in the L2 norm) but misclassified.
-    def __init__(self, net: DenseNet, x, y):
+    def __init__(self, net: Network, x, y):
         self.net = net
         
         self.x = x
@@ -105,12 +105,12 @@ class BlackBoxAdversary():
             if is_adversarial:
                 x_k = x_candidate
                 # Try to accelerate progress
-                delta = min(delta * 1.05, 1.0)
-                epsilon = min(epsilon * 1.05, 0.1)
+                delta = min(delta * 1.05, 2.5)
+                epsilon = min(epsilon * 1.05, 0.25)
             else:
                 # Decrease step sizes, we stepped across the boundary into a non-adversarial zone
-                delta = max(delta * 0.95, 1e-3)
-                epsilon = max(epsilon * 0.95, 1e-4)
+                delta = max(delta * 0.95, 1e-4)
+                epsilon = max(epsilon * 0.95, 1e-5)
 
         # Save images if any are stored
         if xk_points:
