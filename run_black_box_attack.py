@@ -40,22 +40,25 @@ print("Train accuracy:", net.evaluate(train_x, train_y))
 print("Test accuracy:", net.evaluate(test_x, test_y))
 
 print("\n--- Generated Adversarial Images ---")
-n_adv = 10          # Count of new adversarial images to add
-max_adv_dist = 8    # Max dist in 2-norm
+num_steps = 10_000
+n_adv = 50              # Count of new adversarial images to add
+max_adv_dist = 5.0      # Max dist in 2-norm
 failed_attempts = 0
 
+x_ref = []
 adv_x = []
 adv_y = []
+adv_dist = []
 
 # Generate new adversarial images using the black-box decision boundary attack
-i = 0
+i = -1
 while len(adv_x) < n_adv:
-    i += 1
+    i = (i + 1) % train_x.shape[0]
 
     x, y = None, None
-    if np.argmax(net.predict(train_x[i])) == np.argmax(train_y[i]):
+    if np.argmax(net.predict(train_x[i])) == np.argmax(y_train_enc[i]):
         x = train_x[i]
-        y = train_y[i]
+        y = y_train_enc[i]
     else:
         continue
 
@@ -65,21 +68,32 @@ while len(adv_x) < n_adv:
     # Generate a new spook, which must be within a specific distance to x
     spook = None
     for _ in range(5):
-        spook = adversary.generate(max_steps=25_000, verbose=False)
+        spook = adversary.generate(max_steps=num_steps, verbose=False)
         dist = np.linalg.norm(x - spook)
         
         if dist > max_adv_dist:
             failed_attempts += 1
             continue
         else:
+            adv_dist.append(dist)
             adv_x.append(spook)
             adv_y.append(y)
+            x_ref.append(x)
             print(f"Appended adv #{len(adv_x)} -- Dist: {round(dist, 3)}")
             break
 
 print(f"Adversarial accuracy: {net.evaluate(adv_x, adv_y)}")
 print(f"Failed adv generation attempts: {failed_attempts}")
-save_points(adv_x, f"spook")
+
+adv_dist = np.array(adv_dist)
+print(f"Mean - {round(np.mean(adv_dist), 4)} | StD - {round(np.std(adv_dist), 4)}")
+print(f"Largest - {round(np.max(adv_dist), 4)} | Smallest - {round(np.min(adv_dist), 4)}")
+print()
+
+# Uncomment below to save some of the spook/original images to compare
+save_points(adv_x[10:25], "spook")
+save_points(x_ref[10:25], "orig")
+
 
 
 # Verify accuracy on spook data is 0%

@@ -105,8 +105,8 @@ class BlackBoxAdversary():
             if is_adversarial:
                 x_k = x_candidate
                 # Try to accelerate progress
-                delta = min(delta * 1.05, 2.5)
-                epsilon = min(epsilon * 1.05, 0.25)
+                delta = min(delta * 1.05, 1.0)
+                epsilon = min(epsilon * 1.05, 0.1)
             else:
                 # Decrease step sizes, we stepped across the boundary into a non-adversarial zone
                 delta = max(delta * 0.95, 1e-4)
