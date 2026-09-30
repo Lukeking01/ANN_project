@@ -10,6 +10,7 @@ Project 2 for course NUMN21.
 - **Scenarios:** Scripts running various tasks on the neural net (ANN) class.
     - `run_bitwise.py`: Trains ANN with 4 output neurons (bit-wise encoded).
     - `run_black_box_attack.py`: Attacks trained network with boundary attack, then re-trains on those generated samples.
+    - `run_competition.py`: Competition attempt with 10 hidden neurons.
     - `run_competition_maybe.py`: Competition attempt with only 3 hidden neurons.
     - `run_onehot.py`: Trains ANN with 10 output neurons (one-hot encoded).
 - **Example_usage.py:** Reference for model parameters and useful features.
