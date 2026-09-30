@@ -4,6 +4,7 @@ Project 2 for course NUMN21.
 ## Example of the input images
 
 ## Task 6 (Output of the learning success per epoch)
+![image](Images/elbow.png)
 ```
 Epoch 1  Training loss: 4.5568e-01  Validation loss: 4.5589e-01  Validation accuracy: 20.87%
 Epoch 2  Training loss: 4.0797e-01  Validation loss: 4.0732e-01  Validation accuracy: 44.33%
