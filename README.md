@@ -16,6 +16,14 @@ Figure_bitwise
 
 ## Task 5 (Results after the additional attack)
 
+## Contributions
+
+We have all individually finished the assignment and then decided to combine the best parts of each of our codes.
+- Linn Preuss Jelvez - 
+- Lukas Nord -
+- Scott Gibson -
+- Orsolya Bosáková - 
+
 ## TO DO:
 - Finish the readme
 - Move files
