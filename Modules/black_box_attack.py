@@ -12,7 +12,7 @@
 
 import numpy as np
 from Modules.ANN import Network
-from save_points import save_points
+from Modules.data_io import save_points
 
 class BlackBoxAdversary():
     # Takes in a starting image which we wish to mock with a new image that is as close as possible to the original

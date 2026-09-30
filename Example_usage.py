@@ -1,15 +1,9 @@
-
-import gzip
-import pickle
 import numpy as np
-import Modules.ANN as ANN
 import matplotlib.pyplot as plt
+import Modules.ANN as ANN
+from Modules.data_io import read_dataset
 
-## Open the data
-with gzip.open("data/mnist.pkl.gz", "rb") as file:
-    data = pickle.load(file, encoding="latin1")
-
-training_data, validation_data, test_data = data
+training_data, validation_data, test_data = read_dataset("./data")
 
 training_inputs, training_labels = training_data
 validation_inputs, validation_labels = validation_data

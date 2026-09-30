@@ -2,16 +2,14 @@
 import sys
 sys.path.insert(0, "../")
 
-import gzip
-import pickle
 import numpy as np
 import Modules.ANN as ANN
 import matplotlib.pyplot as plt
+from Modules.data_io import read_dataset
 
-with gzip.open("../data/mnist.pkl.gz", "rb") as file:
-    data = pickle.load(file, encoding="latin1")
+np.random.seed(11)
 
-training_data, validation_data, test_data = data
+training_data, validation_data, test_data = read_dataset()
 
 training_inputs, training_labels = training_data
 validation_inputs, validation_labels = validation_data
