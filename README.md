@@ -1,6 +1,23 @@
 # ANN_project
 Project 2 for course NUMN21.
 
+## Files and Usage Notes
+
+- **Modules:** Implementation Code
+    - `ANN.py`: Neural network class, loss, and activation functions.
+    - `black_box_attack.py`: Adversarial attack using steps along the decision boundary.
+    - `data_io.py`: Useful functions for reading in data, and saving data images.
+- **Scenarios:** Scripts running various tasks on the neural net (ANN) class.
+    - `run_bitwise.py`: Trains ANN with 4 output neurons (bit-wise encoded).
+    - `run_black_box_attack.py`: Attacks trained network with boundary attack, then re-trains on those generated samples.
+    - `run_competition_maybe.py`: Competition attempt with only 3 hidden neurons.
+    - `run_onehot.py`: Trains ANN with 10 output neurons (one-hot encoded).
+- **Example_usage.py:** Reference for model parameters and useful features.
+
+---
+
+To run any of the Scenarios, `cd` into the scenarios folder and run the files from there.
+
 ## Example of the input images
 
 ## Task 6 (Output of the learning success per epoch)
@@ -84,6 +101,20 @@ Failed adv generation attempts: 57
 Mean - 4.7979 | StD - 2.11
 Largest - 9.9644 | Smallest - 0.2175
 ```
+
+### Example of a poor adversarial image
+
+The generated image had a diff in the 2-norm of ~6.57.
+
+<img src="./Images/bad-spook-6.57.png" alt="drawing" width="100" style="display: inline-block; margin-inline: 2em;">
+<img src="./Images/bad-spook-ref.png" alt="drawing" width="100" style="display: inline-block;" />
+
+### Example of a good adversarial image
+
+The generated image had a diff in the 2-norm of ~0.26.
+
+<img src="./Images/good-spook-0.26.png" alt="drawing" width="100" style="display: inline-block; margin-inline: 2em;">
+<img src="./Images/good-spook-ref.png" alt="drawing" width="100" style="display: inline-block;" />
 
 ## Contributions
 
