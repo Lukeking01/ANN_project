@@ -14,7 +14,7 @@ valid_x, valid_y = valid_set
 test_x, test_y = test_set
 
 net = Network(
-    [784, 128, 64, 10],
+    [784, 64, 10],
     ["linear","sigmoid", "sigmoid"],
     loss_function="mse",
     output_mode="one_hot",
