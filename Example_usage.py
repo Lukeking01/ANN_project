@@ -39,7 +39,7 @@ Validation_losses, training_losses, final_loss, final_epoch = Example.SGD(
         Y_val=Y_val, # validation labels
         tolerance=1e-4, # training stops if training loss is less than this, default 1e-4
         verbose=True, # Set to false to suppress training outputs, default True
-        max_epoch=10, # maximum epochs trained for, default 2e4
+        max_epoch=5, # maximum epochs trained for, default 2e4
         step_tol=1e-5, # training stops if an individual epoch does not change the training loss by at least this much, default 1e-5
         learning_rate_decay = "random" # If set, learning rate is multiplied by this number each epoch, default 0 = not active
     )
@@ -74,5 +74,8 @@ New_network = ANN.Network.load("saved_models/Example_network.npz")
 
 plt.plot(Validation_losses, label="validation")
 plt.plot(training_losses, label="training")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.tight_layout()
 plt.legend()
 plt.show()

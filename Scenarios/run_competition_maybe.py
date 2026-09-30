@@ -7,8 +7,6 @@ import Modules.ANN as ANN
 import matplotlib.pyplot as plt
 from Modules.data_io import read_dataset
 
-np.random.seed(11)
-
 training_data, validation_data, test_data = read_dataset()
 
 training_inputs, training_labels = training_data
@@ -29,6 +27,7 @@ activation_functions = ["linear", "linear", "step"]
 activation_derivative = [ANN.linear_derivative, ANN.linear_derivative, ANN.sigmoid_derivative]
 
 for _ in range(15):
+    # np.random.seed(22) # For good numbers, uncomment
     overtrain_network = ANN.Network(network_structure,
                     activation_functions,
                     activation_derivative,
