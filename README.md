@@ -7,6 +7,8 @@ Project 2 for course NUMN21.
 
 ## Task 8 (Challenge best result)
 
+> Reached loss: 0.0, in 85 epochs using 3 hidden nodes.
+
 # Extension
 
 ## Task 2 (Comparison of the bitwise representation)
@@ -19,8 +21,8 @@ Figure_bitwise
 ## Contributions
 
 We have all individually finished the assignment and then decided to combine the best parts of each of our codes.
-- Linn Preuss Jelvez - 
-- Lukas Nord -
+- Linn Preuss Jelvez - Minimization of neural network size for the overfit competition.
+- Lukas Nord - Minimization of neural network size for the overfit competition, using questionable methods. 
 - Scott Gibson -
 - Orsolya Bosáková - 
 
