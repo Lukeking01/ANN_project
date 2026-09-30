@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, "../")
+
 import gzip
 import pickle
 import numpy as np
@@ -5,18 +8,18 @@ from ANN import Network
 
 np.random.seed(11)
 
-with gzip.open('mnist.pkl.gz', 'rb') as f:
-    train_set, valid_set, test_set = pickle.load(f, encoding='latin1')
+with gzip.open("../data/mnist.pkl.gz", "rb") as f:
+    train_set, valid_set, test_set = pickle.load(f, encoding="latin1")
 
 train_x, train_y = train_set
 valid_x, valid_y = valid_set
 test_x, test_y = test_set
 
 net = Network(
-    [784, 30, 10],
+    [784, 30, 4],
     ["linear", "sigmoid", "sigmoid"],
-    loss_function="mse",
-    output_mode="one_hot",
+    loss_function="binary_cross_entropy",
+    output_mode="bitwise",
 )
 
 Y_train_enc = net.encode_labels(train_y)
