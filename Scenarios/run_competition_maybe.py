@@ -5,7 +5,7 @@ sys.path.insert(0, "../")
 import gzip
 import pickle
 import numpy as np
-import ANN
+import Modules.ANN as ANN
 import matplotlib.pyplot as plt
 
 with gzip.open("../data/mnist.pkl.gz", "rb") as file:

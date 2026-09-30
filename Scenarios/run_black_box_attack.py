@@ -4,8 +4,8 @@ sys.path.insert(0, "../")
 import gzip
 import pickle
 import numpy as np
-from ANN import Network
-from black_box_attack import BlackBoxAdversary
+from Modules.ANN import Network
+from Modules.black_box_attack import BlackBoxAdversary
 from save_points import save_points
 
 # Read in data
@@ -42,7 +42,7 @@ print("Test accuracy:", net.evaluate(test_x, test_y))
 
 print("\n--- Generated Adversarial Images ---")
 num_steps = 5_000
-n_adv = 500              # Count of new adversarial images to add
+n_adv = 50              # Count of new adversarial images to add
 max_adv_dist = 10.0      # Max dist in 2-norm
 failed_attempts = 0
 

@@ -12,7 +12,7 @@
 ###############################################################################################################################################################################################################
 
 import numpy as np
-from ANN import Network
+from Modules.ANN import Network
 from save_points import save_points
 
 class BlackBoxAdversary():

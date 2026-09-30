@@ -4,7 +4,7 @@ sys.path.insert(0, "../")
 import gzip
 import pickle
 import numpy as np
-from ANN import Network
+from Modules.ANN import Network
 
 np.random.seed(11)
 

@@ -2,7 +2,7 @@
 import gzip
 import pickle
 import numpy as np
-import ANN
+import Modules.ANN as ANN
 import matplotlib.pyplot as plt
 
 ## Open the data
