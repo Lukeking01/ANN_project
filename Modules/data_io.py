@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Constants
 DATA_DIR_PATH = "../data"
-IMG_DIR_PATH = "../imgs"
+IMG_DIR_PATH = "../Data_images"
 
 ### Data Input
 
