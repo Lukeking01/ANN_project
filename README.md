@@ -4,8 +4,17 @@ Project 2 for course NUMN21.
 ## Example of the input images
 
 ## Task 6 (Output of the learning success per epoch)
+```
+Epoch 1  Training loss: 4.5568e-01  Validation loss: 4.5589e-01  Validation accuracy: 20.87%
+Epoch 2  Training loss: 4.0797e-01  Validation loss: 4.0732e-01  Validation accuracy: 44.33%
+Epoch 3  Training loss: 3.8779e-01  Validation loss: 3.8680e-01  Validation accuracy: 50.36%
+Epoch 4  Training loss: 3.1656e-01  Validation loss: 3.1318e-01  Validation accuracy: 69.35%
+Epoch 5  Training loss: 2.6518e-01  Validation loss: 2.5953e-01  Validation accuracy: 78.94%
+```
 
 ## Task 8 (Challenge best result)
+
+> Reached loss: 0.0, in 85 epochs using 3 hidden nodes.
 
 # Extension
 
@@ -45,8 +54,8 @@ Largest - 9.9644 | Smallest - 0.2175
 ## Contributions
 
 We have all individually finished the assignment and then decided to combine the best parts of each of our codes.
-- Linn Preuss Jelvez - 
-- Lukas Nord -
+- Linn Preuss Jelvez - Minimization of neural network size for the overfit competition.
+- Lukas Nord - Minimization of neural network size for the overfit competition, using questionable methods. 
 - Scott Gibson - Decision Based Boundary Adversarial Attack
 - Orsolya Bosáková - 
 
