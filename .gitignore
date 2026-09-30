@@ -222,4 +222,4 @@ __marimo__/
 # --- Custom ---
 
 # Images
-*.png
+imgs/*.png

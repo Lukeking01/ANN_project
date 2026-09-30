@@ -1,15 +1,13 @@
-import gzip
-import pickle
-import numpy as np
-from ANN import Network
-from black_box_attack import BlackBoxAdversary
-from save_points import save_points
+import sys
+sys.path.insert(0, "../")
 
-np.random.seed(11)
+import numpy as np
+from Modules.ANN import Network
+from Modules.black_box_attack import BlackBoxAdversary
+from Modules.data_io import read_dataset, save_points
 
 # Read in data
-with gzip.open('data/mnist.pkl.gz', 'rb') as f:
-    train_set, valid_set, test_set = pickle.load(f, encoding='latin1')
+train_set, valid_set, test_set = read_dataset()
 
 train_x, train_y = train_set
 valid_x, valid_y = valid_set
@@ -79,7 +77,9 @@ while len(adv_x) < n_adv:
             adv_x.append(spook)
             adv_y.append(y)
             x_ref.append(x)
-            print(f"Appended adv #{len(adv_x)} -- Dist: {round(dist, 3)}")
+
+            if len(adv_x) % 50 == 0:
+                print(f"Appended adv #{len(adv_x)} -- Dist: {round(np.mean(adv_dist[-50:]), 3)}")
             break
 
 # Verify accuracy is 0%

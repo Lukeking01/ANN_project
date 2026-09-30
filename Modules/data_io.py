@@ -1,8 +1,31 @@
+import gzip
+import pickle
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-IMG_DIR_PATH = "./imgs"
+# Constants
+DATA_DIR_PATH = "../data"
+IMG_DIR_PATH = "../imgs"
+
+### Data Input
+
+def read_dataset(data_path = DATA_DIR_PATH):
+    """
+    Read in the input datasets, and return a tuple of:
+        training | validation | testing
+
+        train_x, train_y = training
+        valid_x, valid_y = validation
+        test_x, test_y = testing
+    """
+
+    with gzip.open(f"{data_path}/mnist.pkl.gz", "rb") as f:
+        train_set, valid_set, test_set = pickle.load(f, encoding="latin1")
+
+    return train_set, valid_set, test_set
+    
+### Data Output
 
 def save_points(data_points, name="data_point"):
     """

@@ -7,13 +7,12 @@
 # 2. Pick a point, can be random noise, which is already adversarial to x. f(~x_0) != y.
 #   2a. For instance, random sampling on a uniform distribution of pixel values from [0, 1].
 # 3. For up to k_max iterations, perform a random walk along the boundary between the adversarial and non-adversarial region.
-#   3a*. As a cool idea it would be neat to save images along the walk. Show how we go from adversarial random noise to a reasonable replication of an existing data point.
-#   3b. Each step is controlled by two hyper parameters. The size of the total perterbation "delta", and the reduced distance between the adversary and the original image after the step, "epsilon".
+#   3a*. Each step is controlled by two hyper parameters. The size of the total perterbation "delta", and the reduced distance between the adversary and the original image after the step, "epsilon".
 ###############################################################################################################################################################################################################
 
 import numpy as np
-from ANN import Network
-from save_points import save_points
+from Modules.ANN import Network
+from Modules.data_io import save_points
 
 class BlackBoxAdversary():
     # Takes in a starting image which we wish to mock with a new image that is as close as possible to the original

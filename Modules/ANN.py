@@ -502,7 +502,10 @@ class Network:
             previous_loss = loss
             
             if learning_rate_decay:
-                learning_rate *= learning_rate_decay
+                if learning_rate_decay == "random":
+                    learning_rate = np.random.random()
+                else:
+                    learning_rate *= learning_rate_decay
 
     # ---------------------------------------------------------
     # Prediction
