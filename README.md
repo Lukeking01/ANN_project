@@ -52,6 +52,20 @@ Mean - 4.7979 | StD - 2.11
 Largest - 9.9644 | Smallest - 0.2175
 ```
 
+### Example of a poor adversarial image
+
+The generated image had a diff in the 2-norm of ~6.57.
+
+<img src="./Images/bad-spook-6.57.png" alt="drawing" width="100" style="display: inline-block; margin-inline: 2em;">
+<img src="./Images/bad-spook-ref.png" alt="drawing" width="100" style="display: inline-block;" />
+
+### Example of a good adversarial image
+
+The generated image had a diff in the 2-norm of ~0.26.
+
+<img src="./Images/good-spook-0.26.png" alt="drawing" width="100" style="display: inline-block; margin-inline: 2em;">
+<img src="./Images/good-spook-ref.png" alt="drawing" width="100" style="display: inline-block;" />
+
 ## Contributions
 
 We have all individually finished the assignment and then decided to combine the best parts of each of our codes.
