@@ -37,53 +37,86 @@ net.SGD(
 print("Train accuracy:", net.evaluate(train_x, train_y))
 print("Test accuracy:", net.evaluate(test_x, test_y))
 
-print("\n--- Generated Adversarial Images ---")
-num_steps = 5_000
-n_adv = 500              # Count of new adversarial images to add
-max_adv_dist = 10.0      # Max dist in 2-norm
-failed_attempts = 0
+################################################################################################
 
-x_ref = []
-adv_x = []
-adv_y = []
-adv_dist = []
+def gen_adv_imgs(
+    n_adv: int = 100,
+    num_steps: int = 5_000,
+    max_adv_dist: float = 5.0,
+    starting_idx: int = -1,
+):
+    """
+    Generate new images using the Black Box boundary walk method. Regularly prints out an avg
+    dist generated for a new batch of (50) images.
 
-# Generate new adversarial images using the black-box decision boundary attack
-i = -1
-while len(adv_x) < n_adv:
-    i = (i + 1) % train_x.shape[0]
+    :param n_adv: The amount of new images to generate.
+    :param num_steps: The maximum number of steps along the "walk" for each attack.
+    :param max_adv_dist: The maximum allowed distance in L2 norm for a new adversarial image.
+    :param starting_idx: The index in the training data to start at. Use -1 to start at the first 
+    element.
 
-    x, y = None, None
-    if np.argmax(net.predict(train_x[i])) == np.argmax(y_train_enc[i]):
-        x = train_x[i]
-        y = y_train_enc[i]
-    else:
-        continue
+    :returns tuple:
+        Returns the following in order: x_ref, adv_x, adv_y, adv_dist, failed_attempts
+        - x_ref: Original image points.
+        - adv_x: Newly generated adversarial image points.
+        - adv_y: The original correct label for the adversary image.
+        - adv_dist: The distance from the original image in L2 norm.
+        - failed_attempts: The number of attempts to create an adversarial image that never got 
+        below the maximum allowed distance.
+    """
 
-    # x, y contains a "correctly classified" image point
-    adversary = BlackBoxAdversary(net=net, x=x, y=y)
+    failed_attempts = 0
+    x_ref, adv_x, adv_y, adv_dist = [], [], [], []
 
-    # Generate a new spook, which must be within a specific distance to x
-    spook = None
-    for _ in range(5):
-        spook = adversary.generate(max_steps=num_steps, verbose=False)
-        dist = np.linalg.norm(x - spook)
-        
-        if dist > max_adv_dist:
-            failed_attempts += 1
-            continue
+    # Generate new adversarial images using the black-box decision boundary attack
+    i = starting_idx
+    while len(adv_x) < n_adv:
+        i = (i + 1) % train_x.shape[0]
+
+        x, y = None, None
+        if np.argmax(net.predict(train_x[i])) == np.argmax(y_train_enc[i]):
+            x = train_x[i]
+            y = y_train_enc[i]
         else:
-            adv_dist.append(dist)
-            adv_x.append(spook)
-            adv_y.append(y)
-            x_ref.append(x)
+            continue
 
-            if len(adv_x) % 50 == 0:
-                print(f"Appended adv #{len(adv_x)} -- Dist: {round(np.mean(adv_dist[-50:]), 3)}")
-            break
+        # x, y contains a "correctly classified" image point
+        adversary = BlackBoxAdversary(net=net, x=x, y=y)
+
+        # Generate a new spook, which must be within a specific distance to x
+        spook = None
+        for _ in range(5):
+            spook = adversary.generate(max_steps=num_steps, verbose=False)
+            dist = np.linalg.norm(x - spook)
+            
+            if dist > max_adv_dist:
+                failed_attempts += 1
+                continue
+            else:
+                adv_dist.append(dist)
+                adv_x.append(spook)
+                adv_y.append(y)
+                x_ref.append(x)
+
+                if len(adv_x) % 50 == 0:
+                    print(f"Appended adv #{len(adv_x)} -- Dist: {round(np.mean(adv_dist[-50:]), 3)}")
+                break
+
+    return x_ref, adv_x, adv_y, adv_dist, failed_attempts
+
+################################################################################################
+
+# Generate new images
+print("\n--- Generating Adversarial Images ---")
+
+x_ref, adv_x, adv_y, adv_dist, failed_attempts = gen_adv_imgs(
+    n_adv=500,
+    num_steps=5000,
+    max_adv_dist=10.0,
+)
 
 # Verify accuracy is 0%
-print(f"Adversarial accuracy: {net.evaluate(adv_x, adv_y)}")
+print(f"\nAdversarial accuracy: {net.evaluate(adv_x, adv_y)}")
 print(f"Failed adv generation attempts: {failed_attempts}")
 
 adv_dist = np.array(adv_dist)
@@ -93,6 +126,8 @@ print(f"Largest - {round(np.max(adv_dist), 4)} | Smallest - {round(np.min(adv_di
 # Uncomment below to save some of the spook/original images to compare
 # save_points(adv_x[10:25], "spook")
 # save_points(x_ref[10:25], "orig")
+
+print("\nRetraining model on new adversarial images...")
 
 # Re-train model on spook data by appending it to the training set
 net.SGD(
@@ -104,54 +139,19 @@ net.SGD(
 )
 
 # Verify that the new accuracy on the spook data is > 90%
-print(f"Adversarial accuracy: {net.evaluate(adv_x, adv_y)}")
+print(f"\nAdversarial accuracy: {net.evaluate(adv_x, adv_y)}")
 print(f"Test accuracy: {net.evaluate(test_x, test_y)}")
 
-# TODO Extract generation logic into a reusable function
-# TODO Add verbosity flag so that we don't print n_adv lines to the console every time.
-print("Regenerating adversarial images")
+print("\nRegenerating adversarial images")
 
-failed_attempts = 0
-
-x_ref = []
-adv_x = []
-adv_y = []
-adv_dist = []
-
-# Generate new adversarial images using the black-box decision boundary attack
-i = -1
-while len(adv_x) < n_adv:
-    i = (i + 1) % train_x.shape[0]
-
-    x, y = None, None
-    if np.argmax(net.predict(train_x[i])) == np.argmax(y_train_enc[i]):
-        x = train_x[i]
-        y = y_train_enc[i]
-    else:
-        continue
-
-    # x, y contains a "correctly classified" image point
-    adversary = BlackBoxAdversary(net=net, x=x, y=y)
-
-    # Generate a new spook, which must be within a specific distance to x
-    spook = None
-    for _ in range(5):
-        spook = adversary.generate(max_steps=num_steps, verbose=False)
-        dist = np.linalg.norm(x - spook)
-        
-        if dist > max_adv_dist:
-            failed_attempts += 1
-            continue
-        else:
-            adv_dist.append(dist)
-            adv_x.append(spook)
-            adv_y.append(y)
-            x_ref.append(x)
-            print(f"Appended adv #{len(adv_x)} -- Dist: {round(dist, 3)}")
-            break
+x_ref, adv_x, adv_y, adv_dist, failed_attempts = gen_adv_imgs(
+    n_adv=500,
+    num_steps=5000,
+    max_adv_dist=10.0,
+)
 
 # Verify accuracy is 0%
-print(f"Adversarial accuracy: {net.evaluate(adv_x, adv_y)}")
+print(f"\nAdversarial accuracy: {net.evaluate(adv_x, adv_y)}")
 print(f"Failed adv generation attempts: {failed_attempts}")
 
 adv_dist = np.array(adv_dist)
