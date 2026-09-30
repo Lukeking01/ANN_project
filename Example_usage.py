@@ -36,18 +36,18 @@ Example = ANN.Network(
         #loss_derivative = None #  Optional choice of derivative of loss function. Defaults to the derivative of loss_function
         )
 
-Validation_losses, trainging_losses, final_loss, final_epoch = Example.SGD(
+Validation_losses, training_losses, final_loss, final_epoch = Example.SGD(
         X_train = X_train, # training inputs
         Y_train = Y_train, # training labels
-        mini_batch_size=100, # size of mini_batch, default 1
+        mini_batch_size=1000, # size of mini_batch, default 1
         learning_rate=0.1, # learning rate, default 0.1
         X_val=X_val, # validation inputs
         Y_val=Y_val, # validation labels
         tolerance=1e-4, # training stops if training loss is less than this, default 1e-4
         verbose=True, # Set to false to suppress training outputs, default True
-        max_epoch=20, # maximum epochs trained for, default 2e4
+        max_epoch=10, # maximum epochs trained for, default 2e4
         step_tol=1e-5, # training stops if an individual epoch does not change the training loss by at least this much, default 1e-5
-        learning_rate_decay = 0.98 # If set, learning rate is multiplied by this number each epoch, default 0 = not active
+        learning_rate_decay = "random" # If set, learning rate is multiplied by this number each epoch, default 0 = not active
     )
 
 ############## Example of usage of methods in the class
@@ -76,3 +76,9 @@ Example.save("saved_models/Example_network.npz")
 
 # loads a saved network
 New_network = ANN.Network.load("saved_models/Example_network.npz") 
+
+
+plt.plot(Validation_losses, label="validation")
+plt.plot(training_losses, label="training")
+plt.legend()
+plt.show()
