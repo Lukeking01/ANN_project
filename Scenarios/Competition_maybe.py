@@ -8,6 +8,8 @@ import numpy as np
 import ANN
 import matplotlib.pyplot as plt
 
+
+
 with gzip.open("../data/mnist.pkl.gz", "rb") as file:
     data = pickle.load(file, encoding="latin1")
 
@@ -31,6 +33,7 @@ activation_functions = ["linear","linear", "step"]
 activation_derivative = [ANN.sigmoid_derivative,lambda z:1,ANN.sigmoid_derivative]
 
 for _ in range(15):
+    # np.random.seed(22) # For good numbers, uncomment
     overtrain_network = ANN.Network(network_structure,
                     activation_functions,
                     activation_derivative,
