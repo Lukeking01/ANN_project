@@ -26,9 +26,9 @@ Y_val = np.array([ANN.one_hot(y) for y in validation_labels])
 X_test = test_inputs
 Y_test = np.array([ANN.one_hot(y) for y in test_labels])
 
-network_structure = [784,3,  10]
-activation_functions = ["linear","linear", "step"]
-activation_derivative = [ANN.sigmoid_derivative,lambda z:1,ANN.sigmoid_derivative]
+network_structure = [784, 3, 10]
+activation_functions = ["linear", "linear", "step"]
+activation_derivative = [ANN.linear_derivative, ANN.linear_derivative, ANN.sigmoid_derivative]
 
 for _ in range(10):
     overtrain_network = ANN.Network(network_structure,
