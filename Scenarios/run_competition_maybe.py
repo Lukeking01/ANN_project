@@ -28,10 +28,11 @@ network_structure = [784, 3, 10]
 activation_functions = ["linear", "linear", "step"]
 activation_derivative = [ANN.linear_derivative, ANN.linear_derivative, ANN.sigmoid_derivative]
 
-for _ in range(10):
+for _ in range(15):
     overtrain_network = ANN.Network(network_structure,
                     activation_functions,
-                    activation_derivative
+                    activation_derivative,
+                    loss_function = "mse"
                     )
 
 
@@ -42,7 +43,7 @@ for _ in range(10):
         X_train=X_train[:cutoff],
         Y_train=Y_train[:cutoff],
         mini_batch_size=5,
-        learning_rate=0.1,
+        learning_rate=0.05,
         tolerance=1e-10,
         max_epoch = 800,
         step_tol = 0,
