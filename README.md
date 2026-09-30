@@ -58,7 +58,7 @@ We have all individually finished the assignment and then decided to combine the
 - Linn Preuss Jelvez - Minimization of neural network size for the overfit competition.
 - Lukas Nord - Minimization of neural network size for the overfit competition, using questionable methods. 
 - Scott Gibson - Decision Based Boundary Adversarial Attack
-- Orsolya Bosáková - 
+- Orsolya Bosáková - Bitwise representation implementation and comparison
 
 ## TO DO:
 - Finish the readme
