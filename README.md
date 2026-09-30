@@ -92,9 +92,8 @@ We have all individually finished the assignment and then decided to combine the
 - Linn Preuss Jelvez - Minimization of neural network size for the overfit competition.
 - Lukas Nord - Minimization of neural network size for the overfit competition, using questionable methods. 
 - Scott Gibson - Decision Based Boundary Adversarial Attack
-- Orsolya Bosáková - Bitwise representation implementation and comparison
+- Orsolya Bosáková - Bitwise representation implementation and comparison, FGSM attack
 
 ## TO DO:
 - Finish the readme
 - Update slides for presentation
-- (Optional) Add another attack
