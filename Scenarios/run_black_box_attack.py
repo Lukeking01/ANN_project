@@ -39,7 +39,7 @@ print("Test accuracy:", net.evaluate(test_x, test_y))
 
 print("\n--- Generated Adversarial Images ---")
 num_steps = 5_000
-n_adv = 50              # Count of new adversarial images to add
+n_adv = 500              # Count of new adversarial images to add
 max_adv_dist = 10.0      # Max dist in 2-norm
 failed_attempts = 0
 
@@ -77,7 +77,9 @@ while len(adv_x) < n_adv:
             adv_x.append(spook)
             adv_y.append(y)
             x_ref.append(x)
-            print(f"Appended adv #{len(adv_x)} -- Dist: {round(dist, 3)}")
+
+            if len(adv_x) % 50 == 0:
+                print(f"Appended adv #{len(adv_x)} -- Dist: {round(np.mean(adv_dist[-50:]), 3)}")
             break
 
 # Verify accuracy is 0%
