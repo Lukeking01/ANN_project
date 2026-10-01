@@ -31,7 +31,7 @@ net.SGD(
     mini_batch_size=32,
     learning_rate=1.0,
     X_val=valid_x, Y_val=y_val_enc,
-    max_epoch=10, verbose=False,
+    max_epoch=10, verbose=True,
 )
 
 print("Train accuracy:", net.evaluate(train_x, train_y))
@@ -67,6 +67,7 @@ def gen_adv_imgs(
 
     failed_attempts = 0
     x_ref, adv_x, adv_y, adv_dist = [], [], [], []
+    print_offset = 100
 
     # Generate new adversarial images using the black-box decision boundary attack
     i = starting_idx
@@ -86,7 +87,7 @@ def gen_adv_imgs(
         # Generate a new spook, which must be within a specific distance to x
         spook = None
         for _ in range(5):
-            spook = adversary.generate(max_steps=num_steps, verbose=False)
+            spook, steps_taken = adversary.generate(max_steps=num_steps, verbose=False)
             dist = np.linalg.norm(x - spook)
             
             if dist > max_adv_dist:
@@ -98,8 +99,8 @@ def gen_adv_imgs(
                 adv_y.append(y)
                 x_ref.append(x)
 
-                if len(adv_x) % 50 == 0:
-                    print(f"Appended adv #{len(adv_x)} -- Dist: {round(np.mean(adv_dist[-50:]), 3)}")
+                if len(adv_x) % print_offset == 0:
+                    print(f"Appended adv #{len(adv_x)} -- Mean Dist: {round(np.mean(adv_dist[-print_offset:]), 3)}")
                 break
 
     return x_ref, adv_x, adv_y, adv_dist, failed_attempts
