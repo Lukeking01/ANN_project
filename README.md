@@ -86,6 +86,38 @@ The generated image had a diff in the 2-norm of ~0.26.
 <img src="./Images/good-spook-0.26.png" alt="drawing" width="100" style="display: inline-block; margin-inline: 2em;">
 <img src="./Images/good-spook-ref.png" alt="drawing" width="100" style="display: inline-block;" />
 
+## Task 5* (Same experiment, but with a more robust attack implementation)
+
+This attack was after the hyper-parameter tuning of delta/epsilon in the black-box attack method
+were improved. Average adversarial image distance was improved greatly, so we lowered the maximum allowed distance to 5.0, and generated 5,000 images twice to compare the attack.
+
+It can be seen that generating new fake images after the model was retrained was less successful
+(706 failed attempts compared to 111). And, the mean distance achieved went up to ~2.7 from ~2.1.
+
+```
+    --- Starting test accuracy ---
+Train accuracy: 0.9574
+Test accuracy: 0.9510
+
+    --- First Boundary Adversarial Attack (5000 new images) ---
+Adversarial accuracy: 0.0
+Failed adv generation attempts: 111
+
+Mean - 2.0534 | StD - 0.9716
+Largest - 4.9925 | Smallest - 0.0129
+
+   --- After training the model on the new images appended to a large subset of old training data ---
+Adversarial accuracy: 0.9856
+Test accuracy: 0.9403
+
+    --- Second Boundary Adversarial Attack (5000 new images) ---
+Adversarial accuracy: 0.0
+Failed adv generation attempts: 706
+
+Mean - 2.7121 | StD - 1.1078
+Largest - 4.9997 | Smallest - 0.0292
+```
+
 ## Contributions
 
 We have all individually finished the assignment and then decided to combine the best parts of each of our codes.
