@@ -1,14 +1,17 @@
-###############################################################################################################################################################################################################
+#########################################################################################################
 # Approach: Based on the paper: https://arxiv.org/pdf/1712.04248
 # DECISION-BASED ADVERSARIAL ATTACKS: RELIABLE ATTACKS AGAINST BLACK-BOX MACHINE LEARNING MODELS
 # Wieland Brendel, Jonas Rauber & Matthias Bethge
 #
-# 1. Pick an image to use as reference. Denote this x. It should be classified correctly, f(x) = y. ~x_k will be the adversarially perturbed image at the k-th step of the attack.
+# 1. Pick an image to use as reference. Denote this x. It should be classified correctly, f(x) = y. ~x_k 
+#    will be the adversarially perturbed image at the k-th step of the attack.
 # 2. Pick a point, can be random noise, which is already adversarial to x. f(~x_0) != y.
 #   2a. For instance, random sampling on a uniform distribution of pixel values from [0, 1].
-# 3. For up to k_max iterations, perform a random walk along the boundary between the adversarial and non-adversarial region.
-#   3a*. Each step is controlled by two hyper parameters. The size of the total perterbation "delta", and the reduced distance between the adversary and the original image after the step, "epsilon".
-###############################################################################################################################################################################################################
+# 3. For up to k_max iterations, perform a random walk along the boundary between the adversarial and 
+#    non-adversarial region.
+#   3a*. Each step is controlled by two hyper parameters. The size of the total perterbation "delta", 
+#        and the reduced distance between the adversary and the original image after the step, "epsilon".
+#########################################################################################################
 
 import numpy as np
 from Modules.ANN import Network
@@ -43,8 +46,16 @@ class BlackBoxAdversary():
         """
 
         # Hyper-parameters (adjusted dynamically)
-        delta = 0.1
-        epsilon = 0.01
+        delta = 0.01
+        epsilon = 0.0001
+        # Stop when epsilon gets below the threshold
+        epsilon_thres = 1e-8
+
+        # Track the successful movements.
+        successes = 0
+        # Thresholds to increase/decrease the hyperparameters
+        prop_thres_high = 0.50
+        prop_thres_low = 0.40
 
         closeness_threshold = 1e-5
 
@@ -58,15 +69,20 @@ class BlackBoxAdversary():
         dist = 0
         prev_dist = 1
 
+        steps_taken = max_steps
+
         for step in range(max_steps):
             diff_v = self.x - x_k   # Vector x - x_k
+            diff_v = diff_v / np.linalg.norm(diff_v)
             dist = self._dist(x_k)  # Distance between x, x_k in 2-norm
+
             # Logging
             if verbose:
                 if step % 1000 == 0:
                     print(f"Step {step}: {round(dist, 5)}")
             # Exit condition
-            if dist < closeness_threshold:
+            if dist < closeness_threshold or epsilon < epsilon_thres:
+                steps_taken = step
                 break
 
             # Save image, note ignore offsets if it would save over 50 images
@@ -80,12 +96,11 @@ class BlackBoxAdversary():
             proj = np.dot(noise, diff_v) / (dist ** 2) * diff_v
             noise_orth = noise - proj
 
-            # Normalize step by delta and current distance
+            # Normalize orth step
             noise_orth = noise_orth / np.linalg.norm(noise_orth)
-            orth_step = noise_orth * delta * dist
 
             # Move along dist sphere
-            orth_candidate = x_k + orth_step
+            orth_candidate = x_k + noise_orth * delta * dist
 
             # Re-project onto the sphere centered at x_original
             orth_direction = orth_candidate - self.x
@@ -100,19 +115,27 @@ class BlackBoxAdversary():
 
             is_adversarial = not self._classify(x_candidate)
 
-            # Accept or Reject candidate, and adjust step sizes accordingly
+            # Accept or Reject candidate
             if is_adversarial:
                 x_k = x_candidate
-                # Try to accelerate progress
-                delta = min(delta * 1.05, 1.0)
-                epsilon = min(epsilon * 1.05, 0.1)
-            else:
+                successes += 1
+
+            # Adjust step sizes accordingly to local geometry
+            success_prop = successes / (step + 1)
+
+            # Only tune hyperparameters every 100 iterations
+            if success_prop < prop_thres_low:
                 # Decrease step sizes, we stepped across the boundary into a non-adversarial zone
-                delta = max(delta * 0.95, 1e-4)
-                epsilon = max(epsilon * 0.95, 1e-5)
+                delta = delta * 0.90
+                epsilon = epsilon * 0.90
+            elif success_prop >= prop_thres_high:
+                # Try to accelerate progress, but don't allow delta/epsilon to get too large
+                if delta < 0.5:
+                    delta = delta * 1.1
+                    epsilon = epsilon * 1.1
 
         # Save images if any are stored
         if xk_points:
             save_points(xk_points, "spook-step")
-        return x_k
+        return x_k, steps_taken
     
