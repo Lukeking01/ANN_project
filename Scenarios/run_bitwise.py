@@ -14,7 +14,7 @@ valid_x, valid_y = valid_set
 test_x, test_y = test_set
 
 net = Network(
-    [784, 30, 4],
+    [784, 64, 4],
     ["linear", "sigmoid", "sigmoid"],
     loss_function="binary_cross_entropy",
     output_mode="bitwise",

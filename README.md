@@ -40,9 +40,42 @@ Epoch 5  Training loss: 2.6518e-01  Validation loss: 2.5953e-01  Validation accu
 # Extension
 
 ## Task 2 (Comparison of the bitwise representation)
- > After 10 epochs we end up with the training loss of 0.19156, the validation loss of 0.27674 and validation accuracy of 93.17%. The test accuracy is 92.93%. During this process 39 predictions were invalid (predicted larger than zero). The confusion matrix is the following:
 
-Figure_bitwise
+```
+Epoch 1  Training loss: 4.4777e-01  Validation loss: 4.4367e-01  Validation accuracy: 89.34%
+Epoch 2  Training loss: 2.7868e-01  Validation loss: 3.0124e-01  Validation accuracy: 93.16%
+Epoch 3  Training loss: 2.7631e-01  Validation loss: 3.1325e-01  Validation accuracy: 92.53%
+Epoch 4  Training loss: 2.0057e-01  Validation loss: 2.4893e-01  Validation accuracy: 94.50%
+Epoch 5  Training loss: 1.8104e-01  Validation loss: 2.4624e-01  Validation accuracy: 94.43%
+Epoch 6  Training loss: 1.6453e-01  Validation loss: 2.4137e-01  Validation accuracy: 94.52%
+Epoch 7  Training loss: 1.4649e-01  Validation loss: 2.2981e-01  Validation accuracy: 94.75%
+Epoch 8  Training loss: 1.2567e-01  Validation loss: 2.2570e-01  Validation accuracy: 94.91%
+Epoch 9  Training loss: 1.1457e-01  Validation loss: 2.1984e-01  Validation accuracy: 94.98%
+Epoch 10  Training loss: 1.1185e-01  Validation loss: 2.3131e-01  Validation accuracy: 94.58%
+```
+
+ > After 10 epochs we end up with the training loss of 0.11185, the validation loss of 0.23131 and validation accuracy of 94.58%. The test accuracy is 94.35%. During this process 39 predictions were invalid (predicted larger than zero). The confusion matrix is the following:
+
+![image](Images/Figure_bitwise.png)
+
+```
+Epoch 1  Training loss: 9.9003e-02  Validation loss: 8.9610e-02  Validation accuracy: 90.77%
+Epoch 2  Training loss: 7.7001e-02  Validation loss: 6.9797e-02  Validation accuracy: 92.15%
+Epoch 3  Training loss: 6.7655e-02  Validation loss: 6.1668e-02  Validation accuracy: 92.95%
+Epoch 4  Training loss: 6.1049e-02  Validation loss: 5.6013e-02  Validation accuracy: 93.81%
+Epoch 5  Training loss: 5.5913e-02  Validation loss: 5.1953e-02  Validation accuracy: 94.24%
+Epoch 6  Training loss: 5.2138e-02  Validation loss: 4.8883e-02  Validation accuracy: 94.43%
+Epoch 7  Training loss: 4.9149e-02  Validation loss: 4.6440e-02  Validation accuracy: 95.00%
+Epoch 8  Training loss: 4.6300e-02  Validation loss: 4.4301e-02  Validation accuracy: 95.16%
+Epoch 9  Training loss: 4.4012e-02  Validation loss: 4.2247e-02  Validation accuracy: 95.52%
+Epoch 10  Training loss: 4.1448e-02  Validation loss: 4.0315e-02  Validation accuracy: 95.67%
+```
+
+ > After 10 epochs we end up with the training loss of 0.041448, the validation loss of 0.040315 and validation accuracy of 95.67%. The test accuracy is 95.15%. The confusion matrix is the following:
+
+![image](Images/Figure_onehot.png)
+
+ > Overall, we can see that the onehot start gets better results.
 
 ## Task 5 (Results after the additional attack)
 

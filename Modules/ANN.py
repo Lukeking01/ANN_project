@@ -298,20 +298,23 @@ class Network:
     # ---------------------------------------------------------
 
     def encode_labels(self, labels):
+        '''Creates the [8,4,2,1] format for bitwise encoding'''
         labels = np.asarray(labels)
         if self.output_mode == "one_hot":
             return np.eye(10)[labels]
-        return ((labels[:, None] >> np.arange(3, -1, -1)) & 1).astype(float) #creates the [X,X,X,X] format
+        return ((labels[:, None] >> np.arange(3, -1, -1)) & 1).astype(float)
 
     def decode(self, outputs):
+        '''Applies the [X,X,X,X] to [8,4,2,1] to decode the binary'''
         if self.output_mode == "one_hot":
             return np.argmax(outputs, axis=1)
         bits = (outputs >= 0.5).astype(int)
-        return bits @ np.array([8, 4, 2, 1]) #applies the [X,X,X,X] to [8,4,2,1] to decode the binary
+        return bits @ np.array([8, 4, 2, 1])
 
     def actual_labels(self, Y):
+        '''Transforms the binary back to ineteger labels'''
         Y = np.asarray(Y)
-        return self.decode(Y) if Y.ndim > 1 else Y #returns integer labels
+        return self.decode(Y) if Y.ndim > 1 else Y
 
 
     # ---------------------------------------------------------
